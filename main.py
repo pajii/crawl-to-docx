@@ -11,18 +11,11 @@ MAIN_PATHS = {
     "modules": r'./modules',
     "chrome": r'./data/chromedriver.exe'
 }
-REQUIRED_MODULE = {
-    "data_manager" : ["pandas", "numpy", "error_test"]
-}
 
 line_length = 50
 
-#functions
-def check_exist_modules(module_name: str, print_message: bool):
-    global REQUIRED_MODULE
-    for i_module_name in REQUIRED_MODULE[module_name]:
-        if i_module_name not in sys.modules:
-            print("dsg")
+
+# functions
 
 # check directory
 print("=" * line_length)
@@ -58,17 +51,14 @@ if not os.path.exists(MAIN_PATHS["chrome"]):
     exit()
 print(" *done*")
 
-
 print('=' * line_length)
 # csv_data format : [site][category][date_make](comment).csv
 print("  checking data..")
 print("  checking modules..")
 
+
 print("  최근에 저장한 파일 체크중..")
 from modules import data_manager
-
-
-
 
 print("최근에 저장한 파일이 없습니다.")
 
