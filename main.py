@@ -1,5 +1,8 @@
+# region main import
 import os
 import sys
+
+# endregion
 
 # I want to make this gui
 print("hello world\n")
@@ -14,48 +17,55 @@ MAIN_PATHS = {
 
 line_length = 50
 
+process_line_length = 50
 
-# functions
 
-# check directory
-print("=" * line_length)
-print("  checking directory & files..")
-if not os.path.exists(MAIN_PATHS['data_dir']):
-    print("!  you don't have a data directory")
-    print(f"!  creating data directory in '{MAIN_PATHS['data_dir']}'..")
-    os.mkdir(MAIN_PATHS['data_dir'])
+# region functions
 
-if not os.path.exists(MAIN_PATHS['already_in_data']):
-    print("!  you don't have a already_in_data directory")
-    print(f"!  creating already_in_data directory in '{MAIN_PATHS['already_in_data']}'..")
-    os.mkdir(MAIN_PATHS['already_in_data'])
+# region checking requirements
+def check_directory_and_files(display_process: bool = False) -> None:
+    global line_length, MAIN_PATHS
+    if display_process:
+        print("=" * process_line_length)
+        print("  checking directory & files..")
 
-if not os.path.exists(MAIN_PATHS['documents']):
-    print("!  you don't have a documents directory")
-    print(f"!  creating documents directory in '{MAIN_PATHS['documents']}'..")
-    os.mkdir(MAIN_PATHS['documents'])
+    for key, path in MAIN_PATHS.items():
+        if display_process:
+            print(f"  check path {key} : {path}", end='')
 
-if not os.path.exists(MAIN_PATHS['modules']):
-    print("!  you don't have a modules directory")
-    print("!!! if you don't have modules, you can't use this programs")
-    _ = input()
-    exit()
-print(" *done*")
+        if (os.path.exists(path)):
+            if display_process:
+                print(" [True]")
+        else:
+            if display_process:
+                print(" [False]")
+            # make dir or exit
+            if '.' in os.path.basename(path):
+                print(f"!!! you must have {key} file '{path}'")
+                _ = input()
+                exit()
+            else:
+                print(f'!  creating data directory in {path}')
+                os.mkdir(MAIN_PATHS['data_dir'])
+    if display_process:
+        print("  *done*")
+
+
+# endregion
+
+# endregion
+
+
+# region
 
 # checking requirements
 print('=' * line_length)
-print("  checking requirements..")
-if not os.path.exists(MAIN_PATHS["chrome"]):
-    print(f"!!! you should download chromedriver.exe in '{os.path.dirname(MAIN_PATHS['chrome'])}'")
-    _ = input()
-    exit()
-print(" *done*")
+check_directory_and_files(True)
 
 print('=' * line_length)
 # csv_data format : [site][category][date_make](comment).csv
 print("  checking data..")
 print("  checking modules..")
-
 
 print("  최근에 저장한 파일 체크중..")
 from modules import data_manager

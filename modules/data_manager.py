@@ -23,7 +23,7 @@ class DataManager:
         def __init__(self, _path: str):
             pass
 
-    # check file has correct name
+'''    # check file has correct name
     def isCorrectDataFileName(self, _filename: str, print_message=False) -> bool:
         name_list = _filename.split()
         if len(name_list) < 3:
@@ -32,4 +32,4 @@ class DataManager:
             return False
         # site
         if name_list[0][1:-1] in DataManager.supported_sites:
-            pass
+            pass'''
