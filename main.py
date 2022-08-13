@@ -1,11 +1,10 @@
-# region main import
 import os
+import importlib.util as importutil
 import sys
 
-# endregion
-
 # I want to make this gui
-print("hello world\n")
+
+# region requirements
 
 MAIN_PATHS = {
     "data_dir": r'./data',
@@ -14,26 +13,31 @@ MAIN_PATHS = {
     "modules": r'./modules',
     "chrome": r'./data/chromedriver.exe'
 }
+DISPLAY_PROCESS = True
+PROCESS_LINE_LENGTH = 50
 
-line_length = 50
+MODULE_REQUIREMENTS = \
+    ['os', 'pandas', 'numpy', 'bs4', 'PIL', 'copy', 'selenium', 'shutil', 'docx' ]
 
-process_line_length = 50
 
+# endregion
 
 # region functions
 
 # region checking requirements
+
+
 def check_directory_and_files(display_process: bool = False) -> None:
-    global line_length, MAIN_PATHS
+    global PROCESS_LINE_LENGTH, MAIN_PATHS
     if display_process:
-        print("=" * process_line_length)
+        print("=" * PROCESS_LINE_LENGTH)
         print("  checking directory & files..")
 
     for key, path in MAIN_PATHS.items():
         if display_process:
             print(f"  check path {key} : {path}", end='')
 
-        if (os.path.exists(path)):
+        if os.path.exists(path):
             if display_process:
                 print(" [True]")
         else:
@@ -51,25 +55,53 @@ def check_directory_and_files(display_process: bool = False) -> None:
         print("  *done*")
 
 
-# endregion
+def check_modules(display_process: bool = False) -> None:
+    global PROCESS_LINE_LENGTH, MODULE_REQUIREMENTS
+    if display_process:
+        print("=" * PROCESS_LINE_LENGTH)
+        print("  checking modules")
+    not_exist_modules = [module_name for module_name in MODULE_REQUIREMENTS
+                         if importutil.find_spec(module_name) is None]
+    if display_process:
+        for module_name in MODULE_REQUIREMENTS:
+            print(f"  check module : {module_name} [{not module_name in not_exist_modules}]")
+    if len(not_exist_modules) != 0:
+        print(f"!  there is no module in python : {', '.join(not_exist_modules)}")
+        _ = input()
+        exit()
+    print("  *done*")
 
 # endregion
 
 
-# region
+def import_modules(display_process: bool = False) -> None:
+    if display_process:
+        print("=" * PROCESS_LINE_LENGTH)
+        print("  import modules")
+
+
+# endregion
+
+# region run section
 
 # checking requirements
-print('=' * line_length)
-check_directory_and_files(True)
+print('=' * PROCESS_LINE_LENGTH)
 
-print('=' * line_length)
+check_directory_and_files(DISPLAY_PROCESS)
+check_modules(DISPLAY_PROCESS)
+
+import_modules(DISPLAY_PROCESS)
+
+print('=' * PROCESS_LINE_LENGTH)
 # csv_data format : [site][category][date_make](comment).csv
 print("  checking data..")
-print("  checking modules..")
 
 print("  최근에 저장한 파일 체크중..")
+
 from modules import data_manager
 
 print("최근에 저장한 파일이 없습니다.")
 
 print(f"최근에 저장한 날짜 : ")
+
+# endregion
