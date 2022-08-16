@@ -1,5 +1,9 @@
 import os
+import time
 import importlib.util as importutil
+from modules import data_manager
+from modules import webdriver_manager
+
 import sys
 
 # I want to make this gui
@@ -9,15 +13,23 @@ import sys
 MAIN_PATHS = {
     "data_dir": r'./data',
     "already_in_data": r'./data/already_in_data',
+    "temp_download": r'./data/temp_download',
     "documents": r'./documents',
     "modules": r'./modules',
+    "modules/data_manager": r'./modules/data_manager.py',
+    "modules/webdriver_manager": r'./modules/webdriver_manager.py',
     "chrome": r'./data/chromedriver.exe'
 }
 DISPLAY_PROCESS = True
+DISPLAY_CHROME_DRIVER = True
 PROCESS_LINE_LENGTH = 50
 
+DRIVER_WAIT_TIME = 4  # 4~6 sec
+
 MODULE_REQUIREMENTS = \
-    ['os', 'pandas', 'numpy', 'bs4', 'PIL', 'copy', 'selenium', 'shutil', 'docx' ]
+    ['os', 'pandas', 'numpy', 'bs4', 'PIL',
+     'copy', 'selenium', 'shutil', 'docx', 'time',
+     'requests', 'csv', 'json', 'time', ]
 
 
 # endregion
@@ -71,20 +83,37 @@ def check_modules(display_process: bool = False) -> None:
         exit()
     print("  *done*")
 
+
 # endregion
+
 
 
 def import_modules(display_process: bool = False) -> None:
     if display_process:
         print("=" * PROCESS_LINE_LENGTH)
         print("  import modules")
+    # 메인에 필요한 것만 불러올 것
 
+
+# region webdriver_manager function
+
+
+def change_webdriver_manager_setting(web_man_in : webdriver_manager.WebdriverManager) -> None:
+    web_man_in.DISPLAY_PROCESS = DISPLAY_PROCESS
+    web_man_in.DISPLAY_CHROME_DRIVER = DISPLAY_CHROME_DRIVER
+    web_man_in.PROCESS_LINE_LENGTH = PROCESS_LINE_LENGTH
+    web_man_in.WAIT_TIME = DRIVER_WAIT_TIME
+
+
+# endregion
 
 # endregion
 
 # region run section
 
+# ===========================================
 # checking requirements
+
 print('=' * PROCESS_LINE_LENGTH)
 
 check_directory_and_files(DISPLAY_PROCESS)
@@ -98,7 +127,11 @@ print("  checking data..")
 
 print("  최근에 저장한 파일 체크중..")
 
-from modules import data_manager
+web_man = webdriver_manager.WebdriverManager(MAIN_PATHS['chrome'])
+change_webdriver_manager_setting(web_man)
+web_man.start_driver()
+time.sleep(5)
+web_man.quit_driver()
 
 print("최근에 저장한 파일이 없습니다.")
 

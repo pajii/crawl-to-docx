@@ -32,4 +32,9 @@ class DataManager:
             return False
         # site
         if name_list[0][1:-1] in DataManager.supported_sites:
-            pass'''
+            pass
+
+    def print_supported_site(self) -> None:
+        print(" " * 5 + "supported site" + " " * 5)
+        for site_name in DataManager.supported_sites:
+            print(" " + site_name)'''
